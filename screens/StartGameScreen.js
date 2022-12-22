@@ -1,10 +1,15 @@
 import {useState} from 'react'
-import { TextInput, View, StyleSheet, Alert } from "react-native";
+import { TextInput, View, StyleSheet, Alert, Text, useWindowDimensions, KeyboardAvoidingView, ScrollView } from "react-native";
 import PrimaryButton from "../components/ui/PrimaryButton";
 import Colors from "../constants/colors";
+import Title from '../components/ui/Title';
+import Card from '../components/ui/Card';
+import InstructionText from '../components/ui/InstructionText';
 
 function StartGameScreen({onPickNumber}) {
   const [enteredNumber, setEnteredNumber] = useState('');
+
+  const {width, height} = useWindowDimensions();
 
   function numberInputHandler(enteredText) {
     setEnteredNumber(enteredText);
@@ -25,7 +30,16 @@ function StartGameScreen({onPickNumber}) {
 
   }
 
-  return (<View style={styles.inputContainer}>
+  // console.log('height'+height)
+  const marginTopDistance =  height < 397 ? 70 : 170;
+
+  return (
+    <ScrollView style={styles.screen}>
+      <KeyboardAvoidingView  style={styles.screen} behavior="position">
+      <View style = {[styles.rootContainer, {marginTop: marginTopDistance}]}>
+    <Title>Guess My Number</Title>
+    <Card>
+      <InstructionText style={styles.startScreenTitle}>Enter a Number and I will Guess..</InstructionText>
     <TextInput 
     style={styles.numberInput} 
     maxLength={2} 
@@ -43,25 +57,25 @@ function StartGameScreen({onPickNumber}) {
       <PrimaryButton onPress={confirmInputHandler}>Confirm</PrimaryButton>
       </View>
     </View>
-  </View>);
+  </Card>
+  </View>
+    </KeyboardAvoidingView>
+    </ScrollView>
+  );
 }
 
 export default StartGameScreen;
 
+// const deviceHeight = Dimensions.get('window').height;
+
 const styles = StyleSheet.create({
-  inputContainer:{
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginTop: 100,
-    marginHorizontal: 24,
-    padding: 16,
-    backgroundColor: Colors.primary800,
-    borderRadius: 8,
-    elevation: 4,
-    shadowColor: 'black',
-    shadowOffset: {width: 0, height: 2},
-    shadowRadius: 6,
-    shadowOpacity: 0.25
+  screen: {
+    flex: 1
+  },
+  rootContainer: {
+    flex: 1,
+    // marginTop:  deviceHeight < 380 ? 30 : 80,
+    alignItems: 'center'
   },
   numberInput: {
     height: 50,
@@ -81,5 +95,8 @@ const styles = StyleSheet.create({
   },
   buttonContainer: {
     flex: 1
+  },
+  startScreenTitle: {
+    fontSize: 21
   }
 })
